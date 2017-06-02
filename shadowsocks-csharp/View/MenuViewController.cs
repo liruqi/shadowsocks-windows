@@ -42,13 +42,13 @@ namespace Shadowsocks.View
         private MenuItem ServersItem;
         private MenuItem globalModeItem;
         private MenuItem PACModeItem;
-        private MenuItem localPACItem;
-        private MenuItem onlinePACItem;
+        //private MenuItem localPACItem;
+        //private MenuItem onlinePACItem;
         private MenuItem editLocalPACItem;
-        private MenuItem updateFromGFWListItem;
-        private MenuItem editGFWUserRuleItem;
-        private MenuItem editOnlinePACItem;
-        private MenuItem secureLocalPacUrlToggleItem;
+        //private MenuItem updateFromGFWListItem;
+        //private MenuItem editGFWUserRuleItem;
+        //private MenuItem editOnlinePACItem;
+        //private MenuItem secureLocalPacUrlToggleItem;
         private MenuItem autoCheckUpdatesToggleItem;
         private MenuItem checkPreReleaseToggleItem;
         private MenuItem proxyItem;
@@ -272,17 +272,19 @@ namespace Shadowsocks.View
                     CreateMenuItem("Scan QRCode from Screen...", new EventHandler(this.ScanQRCodeItem_Click)),
                     CreateMenuItem("Import URL from Clipboard...", new EventHandler(this.ImportURLItem_Click))
                 }),
+                
                 CreateMenuGroup("PAC ", new MenuItem[] {
-                    this.localPACItem = CreateMenuItem("Local PAC", new EventHandler(this.LocalPACItem_Click)),
-                    this.onlinePACItem = CreateMenuItem("Online PAC", new EventHandler(this.OnlinePACItem_Click)),
-                    new MenuItem("-"),
+                    //this.localPACItem = CreateMenuItem("Local PAC", new EventHandler(this.LocalPACItem_Click)),
+                    //this.onlinePACItem = CreateMenuItem("Online PAC", new EventHandler(this.OnlinePACItem_Click)),
+                    //Snew MenuItem("-"),
                     this.editLocalPACItem = CreateMenuItem("Edit Local PAC File...", new EventHandler(this.EditPACFileItem_Click)),
-                    this.updateFromGFWListItem = CreateMenuItem("Update Local PAC from GFWList", new EventHandler(this.UpdatePACFromGFWListItem_Click)),
-                    this.editGFWUserRuleItem = CreateMenuItem("Edit User Rule for GFWList...", new EventHandler(this.EditUserRuleFileForGFWListItem_Click)),
-                    this.secureLocalPacUrlToggleItem = CreateMenuItem("Secure Local PAC", new EventHandler(this.SecureLocalPacUrlToggleItem_Click)),
+                    //this.updateFromGFWListItem = CreateMenuItem("Update Local PAC from GFWList", new EventHandler(this.UpdatePACFromGFWListItem_Click)),
+                    //this.editGFWUserRuleItem = CreateMenuItem("Edit User Rule for GFWList...", new EventHandler(this.EditUserRuleFileForGFWListItem_Click)),
+                    //this.secureLocalPacUrlToggleItem = CreateMenuItem("Secure Local PAC", new EventHandler(this.SecureLocalPacUrlToggleItem_Click)),
                     CreateMenuItem("Copy Local PAC URL", new EventHandler(this.CopyLocalPacUrlItem_Click)),
-                    this.editOnlinePACItem = CreateMenuItem("Edit Online PAC URL...", new EventHandler(this.UpdateOnlinePACURLItem_Click)),
+                    //this.editOnlinePACItem = CreateMenuItem("Edit Online PAC URL...", new EventHandler(this.UpdateOnlinePACURLItem_Click)),
                 }),
+                
                 this.proxyItem = CreateMenuItem("Forward Proxy...", new EventHandler(this.proxyItem_Click)),
                 new MenuItem("-"),
                 this.AutoStartupItem = CreateMenuItem("Start on Boot", new EventHandler(this.AutoStartupItem_Click)),
@@ -408,9 +410,6 @@ namespace Shadowsocks.View
             ShareOverLANItem.Checked = config.shareOverLan;
             VerboseLoggingToggleItem.Checked = config.isVerboseLogging;
             AutoStartupItem.Checked = AutoStartup.Check();
-            onlinePACItem.Checked = onlinePACItem.Enabled && config.useOnlinePac;
-            localPACItem.Checked = !onlinePACItem.Checked;
-            secureLocalPacUrlToggleItem.Checked = config.secureLocalPac;
             UpdatePACItemsEnabledStatus();
             UpdateUpdateMenu();
         }
@@ -777,35 +776,6 @@ namespace Shadowsocks.View
             }
         }
 
-        private void LocalPACItem_Click(object sender, EventArgs e)
-        {
-            if (!localPACItem.Checked)
-            {
-                localPACItem.Checked = true;
-                onlinePACItem.Checked = false;
-                controller.UseOnlinePAC(false);
-                UpdatePACItemsEnabledStatus();
-            }
-        }
-
-        private void OnlinePACItem_Click(object sender, EventArgs e)
-        {
-            if (!onlinePACItem.Checked)
-            {
-                if (controller.GetConfigurationCopy().pacUrl.IsNullOrEmpty())
-                {
-                    UpdateOnlinePACURLItem_Click(sender, e);
-                }
-                if (!controller.GetConfigurationCopy().pacUrl.IsNullOrEmpty())
-                {
-                    localPACItem.Checked = false;
-                    onlinePACItem.Checked = true;
-                    controller.UseOnlinePAC(true);
-                }
-                UpdatePACItemsEnabledStatus();
-            }
-        }
-
         private void UpdateOnlinePACURLItem_Click(object sender, EventArgs e)
         {
             string origPacUrl = controller.GetConfigurationCopy().pacUrl;
@@ -832,20 +802,7 @@ namespace Shadowsocks.View
 
         private void UpdatePACItemsEnabledStatus()
         {
-            if (this.localPACItem.Checked)
-            {
-                this.editLocalPACItem.Enabled = true;
-                this.updateFromGFWListItem.Enabled = true;
-                this.editGFWUserRuleItem.Enabled = true;
-                this.editOnlinePACItem.Enabled = false;
-            }
-            else
-            {
-                this.editLocalPACItem.Enabled = false;
-                this.updateFromGFWListItem.Enabled = false;
-                this.editGFWUserRuleItem.Enabled = false;
-                this.editOnlinePACItem.Enabled = true;
-            }
+            this.editLocalPACItem.Enabled = true;
         }
 
 
