@@ -118,10 +118,7 @@ namespace Shadowsocks.Controller
                 else
                 {
                     Logging.Debug("No update is available");
-                    if (CheckUpdateCompleted != null)
-                    {
-                        CheckUpdateCompleted(this, new EventArgs());
-                    }
+                    CheckUpdateCompleted?.Invoke(this, new EventArgs());
                 }
             }
             catch (Exception ex)
@@ -155,10 +152,7 @@ namespace Shadowsocks.Controller
                     return;
                 }
                 Logging.Debug($"New version {LatestVersionNumber}{LatestVersionSuffix} found: {LatestVersionLocalName}");
-                if (CheckUpdateCompleted != null)
-                {
-                    CheckUpdateCompleted(this, new EventArgs());
-                }
+                CheckUpdateCompleted?.Invoke(this, new EventArgs());
             }
             catch (Exception ex)
             {
