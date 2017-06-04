@@ -357,7 +357,7 @@ foreach (var item in filesToCleanup)
   -->
   <Target Name="AfterBuild">
     <PropertyGroup>
-      <TargetUWP>..\UWPApp\win32\</TargetUWP>
+      <TargetUWP>..\Mume\win32\</TargetUWP>
     </PropertyGroup>
      <ItemGroup>
        <Win32Binaries Include="$(TargetDir)\*" />
