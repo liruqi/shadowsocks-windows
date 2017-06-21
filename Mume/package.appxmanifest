@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap rescap mp">
-  <Identity Name="7440RuqiLi.Mume" Version="1.1.0.0" Publisher="CN=3DCBFEFB-A9F8-4081-AC91-8EB1859F7E14" />
+  <Identity Name="7440RuqiLi.Mume" Version="1.1.1.0" Publisher="CN=3DCBFEFB-A9F8-4081-AC91-8EB1859F7E14" />
   <mp:PhoneIdentity PhoneProductId="15633ff2-0b5a-4db4-b14a-494451878b21" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Mume</DisplayName>
