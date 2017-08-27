@@ -108,6 +108,7 @@ namespace Shadowsocks.Model
             bool isOldFormatUrl = possiblyUnpaddedBase64.Length == 0;
             if (isOldFormatUrl)
             {
+                if (parsedUrl.Scheme != "ss") return null;
                 int prefixLength = "ss://".Length;
                 int indexOfHashOrSlash = serverUrl.LastIndexOfAny(
                     new[] { '/', '#' },
@@ -124,6 +125,14 @@ namespace Shadowsocks.Model
             }
             else
             {
+                if (parsedUrl.Scheme == "shadowsocks")
+                {
+                    char[] separator = { ':' };
+                    string[] parts = possiblyUnpaddedBase64.Split(separator, 1);
+                    tmp.method = parts[0];
+                    tmp.password = parts[1];
+                    possiblyUnpaddedBase64 = parts[1];
+                }
                 // Web-safe base64 to normal base64
                 possiblyUnpaddedBase64 = possiblyUnpaddedBase64.Replace('-', '+').Replace('_', '/');
             }
@@ -133,30 +142,42 @@ namespace Shadowsocks.Model
                 '=');
 
             string innerUserInfoOrUrl = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
-            string userInfo;
-            if (isOldFormatUrl)
+            if (parsedUrl.Scheme == "shadowsocks")
             {
-                Uri innerUrl = new Uri("inner://" + innerUserInfoOrUrl);
-                userInfo = innerUrl.GetComponents(UriComponents.UserInfo, UriFormat.Unescaped);
-                tmp.server = innerUrl.GetComponents(UriComponents.Host, UriFormat.Unescaped);
-                tmp.server_port = innerUrl.Port;
+                tmp.server = parsedUrl.GetComponents(UriComponents.Host, UriFormat.Unescaped);
+                tmp.server_port = parsedUrl.Port;
+                if (innerUserInfoOrUrl.IsNullOrEmpty())
+                {
+                    return tmp;
+                }
+                tmp.password = innerUserInfoOrUrl;
             }
             else
             {
-                userInfo = innerUserInfoOrUrl;
-                tmp.server = parsedUrl.GetComponents(UriComponents.Host, UriFormat.Unescaped);
-                tmp.server_port = parsedUrl.Port;
+                string userInfo;
+                if (isOldFormatUrl)
+                {
+                    Uri innerUrl = new Uri("inner://" + innerUserInfoOrUrl);
+                    userInfo = innerUrl.GetComponents(UriComponents.UserInfo, UriFormat.Unescaped);
+                    tmp.server = innerUrl.GetComponents(UriComponents.Host, UriFormat.Unescaped);
+                    tmp.server_port = innerUrl.Port;
+                }
+                else
+                {
+                    userInfo = innerUserInfoOrUrl;
+                    tmp.server = parsedUrl.GetComponents(UriComponents.Host, UriFormat.Unescaped);
+                    tmp.server_port = parsedUrl.Port;
+                }
+
+                string[] userInfoParts = userInfo.Split(new[] { ':' }, 2);
+                if (userInfoParts.Length != 2)
+                {
+                    return null;
+                }
+
+                tmp.method = userInfoParts[0];
+                tmp.password = userInfoParts[1];
             }
-
-            string[] userInfoParts = userInfo.Split(new[] { ':' }, 2);
-            if (userInfoParts.Length != 2)
-            {
-                return null;
-            }
-
-            tmp.method = userInfoParts[0];
-            tmp.password = userInfoParts[1];
-
             NameValueCollection queryParameters = HttpUtility.ParseQueryString(parsedUrl.Query);
             string[] pluginParts = HttpUtility.UrlDecode(queryParameters["plugin"] ?? "").Split(new[] { ';' }, 2);
             if (pluginParts.Length > 0)
@@ -169,7 +190,7 @@ namespace Shadowsocks.Model
                 tmp.plugin_opts = pluginParts[1] ?? "";
             }
 
-            return tmp;            
+            return tmp;
         }
 
         public string Identifier()
