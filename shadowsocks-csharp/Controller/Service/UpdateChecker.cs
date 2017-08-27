@@ -12,7 +12,7 @@ namespace Shadowsocks.Controller
 {
     public class UpdateChecker
     {
-        private const string UpdateURL = "https://mumevpn.com/windows/releases";
+        private const string UpdateURL = "https://mumevpn.com/windows.php";
         private const string UserAgent = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36";
 
         private Configuration config;
@@ -23,7 +23,7 @@ namespace Shadowsocks.Controller
         public string LatestVersionURL;
         public string LatestVersionLocalName;
         public event EventHandler CheckUpdateCompleted;
-
+        public List<string> Servers = new List<string>();
         public const string Version = "4.0.5";
 
         private class CheckUpdateTimer : System.Timers.Timer
@@ -84,6 +84,12 @@ namespace Shadowsocks.Controller
                 {
                     foreach (JObject release in result)
                     {
+                        var uri = (string) release["uri"];
+                        if (! uri.IsNullOrEmpty())
+                        {
+                            this.Servers.Add(uri);
+                            continue;
+                        }
                         var isPreRelease = (bool) release["prerelease"];
                         if (isPreRelease && !config.checkPreRelease)
                         {

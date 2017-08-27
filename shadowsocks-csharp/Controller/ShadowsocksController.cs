@@ -202,6 +202,19 @@ namespace Shadowsocks.Controller
             }
         }
 
+        public bool importServer(string ssURL)
+        {
+            var server = Server.GetServer(ssURL);
+            foreach (var e in _config.configs)
+            {
+                if (e.Equals(server))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public void ToggleEnable(bool enabled)
         {
             _config.enabled = enabled;

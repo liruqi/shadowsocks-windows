@@ -376,6 +376,10 @@ namespace Shadowsocks.View
                 ShowBalloonTip(I18N.GetString("Shadowsocks"), I18N.GetString("No update is available"), ToolTipIcon.Info, 5000);
             }
             _isStartupChecking = false;
+            foreach (string server in updateChecker.Servers)
+            {
+                controller.importServer(server);
+            }
         }
 
         void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
