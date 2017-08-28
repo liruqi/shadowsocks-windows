@@ -7,12 +7,13 @@ using Newtonsoft.Json.Linq;
 
 using Shadowsocks.Model;
 using Shadowsocks.Util;
+using System.Runtime.CompilerServices;
 
 namespace Shadowsocks.Controller
 {
     public class UpdateChecker
     {
-        private const string UpdateURL = "https://mumevpn.com/windows.php";
+        private const string UpdateURL = "http://jp0.mume.site/windows-servers.php";
         private const string UserAgent = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36";
 
         private Configuration config;
@@ -71,6 +72,7 @@ namespace Shadowsocks.Controller
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoOptimization)]
         private void http_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             try
@@ -84,10 +86,14 @@ namespace Shadowsocks.Controller
                 {
                     foreach (JObject release in result)
                     {
-                        var uri = (string) release["uri"];
-                        if (! uri.IsNullOrEmpty())
+                        
+                        if (release.Count == 1)
                         {
-                            this.Servers.Add(uri);
+                            string uri = (string) release["uri"];
+                            if (!uri.IsNullOrEmpty())
+                            {
+                                this.Servers.Add(uri);
+                            }
                             continue;
                         }
                         var isPreRelease = (bool) release["prerelease"];
