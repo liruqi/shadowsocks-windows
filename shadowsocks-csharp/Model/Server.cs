@@ -128,7 +128,7 @@ namespace Shadowsocks.Model
                 if (parsedUrl.Scheme == "shadowsocks")
                 {
                     char[] separator = { ':' };
-                    string[] parts = possiblyUnpaddedBase64.Split(separator, 1);
+                    string[] parts = possiblyUnpaddedBase64.Split(separator, 2);
                     tmp.method = parts[0];
                     tmp.password = parts[1];
                     possiblyUnpaddedBase64 = parts[1];

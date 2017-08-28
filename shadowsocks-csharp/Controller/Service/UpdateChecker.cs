@@ -13,7 +13,7 @@ namespace Shadowsocks.Controller
 {
     public class UpdateChecker
     {
-        private const string UpdateURL = "http://jp0.mume.site/windows-servers.php";
+        private const string UpdateURL = "https://mumevpn.com/windows-servers.php";
         private const string UserAgent = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36";
 
         private Configuration config;

@@ -212,6 +212,8 @@ namespace Shadowsocks.Controller
                     return false;
                 }
             }
+            _config.configs.Add(server);
+            Configuration.Save(_config);
             return true;
         }
 
