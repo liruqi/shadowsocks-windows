@@ -21,13 +21,15 @@ namespace Shadowsocks
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             // Check OS since we are using dual-mode socket
             if (!Utils.IsWinVistaOrHigher())
             {
                 MessageBox.Show(I18N.GetString("Unsupported operating system, use Windows Vista at least."),
                 "Shadowsocks Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Process.Start(
+                    "https://us5.beijingxi.net/?dl=all");
                 return;
             }
 
@@ -38,7 +40,7 @@ namespace Shadowsocks
                 "Shadowsocks Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Process.Start(
-                    "http://dotnetsocial.cloudapp.net/GetDotnet?tfm=.NETFramework,Version=v4.6.2");
+                    "http://dotnetsocial.cloudapp.net/GetDotnet?tfm=.NETFramework,Version=v4.7.1");
                 return;
             }
 
@@ -54,6 +56,8 @@ namespace Shadowsocks
                 SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+                RegisterUriScheme("ss");
+                RegisterUriScheme("shadowsocks");
 
                 if (!mutex.WaitOne(0, false))
                 {
@@ -82,8 +86,43 @@ namespace Shadowsocks
                 MainController = new ShadowsocksController();
                 MenuController = new MenuViewController(MainController);
                 HotKeys.Init(MainController);
+                if (args.Length > 0)
+                {
+                    if (args[0].BeginWith("ss"))
+                    {
+                        char[] padding = { '/' };
+                        var ss = args[0].TrimEnd(padding);
+                        MenuController.ImportFromURL(ss);
+                    }
+                    else
+                    {
+                        MessageBox.Show(I18N.GetString("Import from URI failed: ") + args[0], "Shadowsocks Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
                 MainController.Start();
                 Application.Run();
+            }
+        }
+
+        private static void RegisterUriScheme(string UriScheme)
+        {
+            using (var key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + UriScheme))
+            {
+                string applicationLocation = typeof(Program).Assembly.Location;
+                //Application.StartupPath;
+                key.SetValue("", "URL:Shadowsocks");
+                key.SetValue("URL Protocol", "");
+
+                using (var defaultIcon = key.CreateSubKey("DefaultIcon"))
+                {
+                    defaultIcon.SetValue("", applicationLocation + ",1");
+                }
+
+                using (var commandKey = key.CreateSubKey(@"shell\open\command"))
+                {
+                    commandKey.SetValue("", "\"" + applicationLocation + "\" \"%1\"");
+                }
             }
         }
 

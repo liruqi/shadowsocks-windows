@@ -755,11 +755,17 @@ namespace Shadowsocks.View
 
         private void ImportURLItem_Click(object sender, EventArgs e)
         {
-            var success = controller.AddServerBySSURL(Clipboard.GetText(TextDataFormat.Text));
+            ImportFromURL(Clipboard.GetText(TextDataFormat.Text));
+        }
+
+        public bool ImportFromURL(string s)
+        {
+            var success = controller.AddServerBySSURL(s);
             if (success)
             {
                 ShowConfigForm();
             }
+            return success;
         }
 
         void splash_FormClosed(object sender, FormClosedEventArgs e)
