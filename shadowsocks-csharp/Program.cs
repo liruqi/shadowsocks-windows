@@ -88,15 +88,14 @@ namespace Shadowsocks
                 HotKeys.Init(MainController);
                 if (args.Length > 0)
                 {
-                    if (args[0].BeginWith("ss"))
+                    if (args[0].BeginWith("ss") || args[0].BeginWith("shadowsocks"))
                     {
                         char[] padding = { '/' };
                         var ss = args[0].TrimEnd(padding);
-                        MenuController.ImportFromURL(ss);
-                    }
-                    else
-                    {
-                        MessageBox.Show(I18N.GetString("Import from URI failed: ") + args[0], "Shadowsocks Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (!MenuController.ImportFromURL(ss))
+                        {
+                            MessageBox.Show(I18N.GetString("Import from URI failed: ") + ss, "Shadowsocks Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
 
