@@ -13,7 +13,7 @@ Edit Servers...=編輯伺服器...
 Statistics Config...=統計設定檔...
 Start on Boot=開機啟動
 Forward Proxy...=正向 Proxy 設定...
-Allow Clients from LAN=允許來自區域網路的連線
+Allow other Devices to connect=允許其他裝置連入
 Local PAC=使用本機 PAC
 Online PAC=使用線上 PAC
 Edit Local PAC File...=編輯本機 PAC 檔案...
@@ -49,7 +49,10 @@ Server=伺服器
 Server Addr=伺服器位址
 Server Port=伺服器連接埠
 Password=密碼
+Show Password=顯示密碼
 Encryption=加密
+Plugin=外掛程式
+Plugin Options=外掛程式選項
 Proxy Port=Proxy 連接埠
 Remarks=註解
 Timeout(Sec)=逾時 (秒)
@@ -66,6 +69,7 @@ Use Proxy=使用 Proxy
 Proxy Type=Proxy 類型
 Proxy Addr=Proxy 位址
 Proxy Port=Proxy 連接埠
+If server has a plugin, proxy will not be used=若伺服器含有外掛程式，Proxy 將不被使用
 
 # Log Form
 

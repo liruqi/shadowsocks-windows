@@ -13,7 +13,7 @@ Edit Servers...=サーバーの編集...
 Statistics Config...=統計情報の設定...
 Start on Boot=システムと同時に起動
 Forward Proxy...=フォワードプロキシの設定...
-Allow Clients from LAN=LAN からのアクセスを許可
+Allow other Devices to connect=他のデバイスからの接続を許可する
 Local PAC=ローカル PAC
 Online PAC=オンライン PAC
 Edit Local PAC File...=ローカル PAC ファイルの編集...
@@ -49,7 +49,10 @@ Server=サーバー
 Server Addr=サーバーアドレス
 Server Port=サーバーポート
 Password=パスワード
+Show Password=パスワードを表示する
 Encryption=暗号化
+Plugin=プラグイン
+Plugin Options=プラグインのオプション
 Proxy Port=プロキシポート
 Remarks=付記
 Timeout(Sec)=タイムアウト (秒)
@@ -66,6 +69,7 @@ Use Proxy=プロキシを利用する
 Proxy Type=プロキシの種類
 Proxy Addr=プロキシアドレス
 Proxy Port=プロキシポート
+If server has a plugin, proxy will not be used=サーバーにプラグインがある場合、プロキシは利用されません
 
 # Log Form
 
