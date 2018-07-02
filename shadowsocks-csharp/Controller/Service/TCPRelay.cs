@@ -145,7 +145,7 @@ namespace Shadowsocks.Controller
         private Socket _connection;
 
         private IEncryptor _encryptor;
-        private Server _server;
+        private ShadowsocksServer _server;
 
         private AsyncSession _currentRemoteSession;
 
@@ -206,7 +206,7 @@ namespace Shadowsocks.Controller
 
         public void CreateRemote()
         {
-            Server server = _controller.GetAServer(IStrategyCallerType.TCP, (IPEndPoint)_connection.RemoteEndPoint,
+            ShadowsocksServer server = _controller.GetAServer(IStrategyCallerType.TCP, (IPEndPoint)_connection.RemoteEndPoint,
                 _destEndPoint);
             if (server == null || server.server == "")
                 throw new ArgumentException("No server configured");
@@ -731,7 +731,7 @@ namespace Shadowsocks.Controller
             {
                 var session = (AsyncSession<ServerTimer>)ar.AsyncState;
                 ServerTimer timer = session.State;
-                _server = timer.Server;
+                _server = timer.Server as ShadowsocksServer;
                 timer.Elapsed -= DestConnectTimer_Elapsed;
                 timer.Enabled = false;
                 timer.Dispose();

@@ -79,7 +79,7 @@ namespace Shadowsocks.View
                 {
                     return true;
                 }
-                Server server = GetServerDetailsFromUI();
+                var server = GetServerDetailsFromUI();
                 if (server == null)
                 {
                     return false;
@@ -96,9 +96,9 @@ namespace Shadowsocks.View
             return false;
         }
 
-        private Server GetServerDetailsFromUI()
+        private ShadowsocksServer GetServerDetailsFromUI()
         {
-            Server server = new Server();
+            ShadowsocksServer server = new ShadowsocksServer();
             if (Uri.CheckHostName(server.server = IPTextBox.Text.Trim()) == UriHostNameType.Unknown)
             {
                 MessageBox.Show(I18N.GetString("Invalid server address"));
@@ -130,12 +130,12 @@ namespace Shadowsocks.View
         {
             if (ServersListBox.SelectedIndex >= 0 && ServersListBox.SelectedIndex < _modifiedConfiguration.configs.Count)
             {
-                Server server = _modifiedConfiguration.configs[ServersListBox.SelectedIndex];
+                ShadowsocksServer server = _modifiedConfiguration.configs[ServersListBox.SelectedIndex];
                 SetServerDetailsToUI(server);
             }
         }
 
-        private void SetServerDetailsToUI(Server server)
+        private void SetServerDetailsToUI(ShadowsocksServer server)
         {
             IPTextBox.Text = server.server;
             ServerPortTextBox.Text = server.server_port.ToString();
@@ -243,7 +243,7 @@ namespace Shadowsocks.View
             {
                 return;
             }
-            Server server = Configuration.GetDefaultServer();
+            var server = Configuration.GetDefaultServer();
             _modifiedConfiguration.configs.Add(server);
             LoadServerNameListToUI(_modifiedConfiguration);
             ServersListBox.SelectedIndex = _modifiedConfiguration.configs.Count - 1;
@@ -256,7 +256,7 @@ namespace Shadowsocks.View
             {
                 return;
             }
-            Server currServer = _modifiedConfiguration.configs[_lastSelectedIndex];
+            var currServer = _modifiedConfiguration.configs[_lastSelectedIndex];
             var currIndex = _modifiedConfiguration.configs.IndexOf(currServer);
             _modifiedConfiguration.configs.Insert(currIndex + 1, currServer);
             LoadServerNameListToUI(_modifiedConfiguration);
@@ -308,7 +308,7 @@ namespace Shadowsocks.View
         private void MoveConfigItem(int step)
         {
             int index = ServersListBox.SelectedIndex;
-            Server server = _modifiedConfiguration.configs[index];
+            var server = _modifiedConfiguration.configs[index];
             object item = ServersListBox.Items[index];
 
             _modifiedConfiguration.configs.Remove(server);

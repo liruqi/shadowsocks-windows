@@ -39,7 +39,7 @@ namespace Shadowsocks.Controller
             UDPHandler handler = _cache.get(remoteEndPoint);
             if (handler == null)
             {
-                handler = new UDPHandler(socket, _controller.GetAServer(IStrategyCallerType.UDP, remoteEndPoint, null/*TODO: fix this*/), remoteEndPoint);
+                handler = new UDPHandler(socket, _controller.GetAServer(IStrategyCallerType.UDP, remoteEndPoint, null/*TODO: fix this*/) as ShadowsocksServer, remoteEndPoint);
                 _cache.add(remoteEndPoint, handler);
             }
             handler.Send(firstPacket, length);
@@ -52,13 +52,13 @@ namespace Shadowsocks.Controller
             private Socket _local;
             private Socket _remote;
 
-            private Server _server;
+            private ShadowsocksServer _server;
             private byte[] _buffer = new byte[65536];
 
             private IPEndPoint _localEndPoint;
             private IPEndPoint _remoteEndPoint;
 
-            public UDPHandler(Socket local, Server server, IPEndPoint localEndPoint)
+            public UDPHandler(Socket local, ShadowsocksServer server, IPEndPoint localEndPoint)
             {
                 _local = local;
                 _server = server;

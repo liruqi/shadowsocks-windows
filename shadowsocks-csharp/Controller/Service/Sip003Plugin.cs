@@ -21,7 +21,7 @@ namespace Shadowsocks.Controller.Service
         private bool _started;
         private bool _disposed;
 
-        public static Sip003Plugin CreateIfConfigured(Server server)
+        public static Sip003Plugin CreateIfConfigured(ShadowsocksServer server)
         {
             if (server == null)
             {

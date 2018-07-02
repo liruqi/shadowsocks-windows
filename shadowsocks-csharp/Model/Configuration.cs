@@ -10,7 +10,7 @@ namespace Shadowsocks.Model
     [Serializable]
     public class Configuration
     {
-        public List<Server> configs;
+        public List<ShadowsocksServer> configs;
 
         // when strategy is set, index is ignored
         public string strategy;
@@ -34,7 +34,7 @@ namespace Shadowsocks.Model
 
         private static string CONFIG_FILE = "gui-config.json";
 
-        public Server GetCurrentServer()
+        public ShadowsocksServer GetCurrentServer()
         {
             if (index >= 0 && index < configs.Count)
                 return configs[index];
@@ -44,10 +44,13 @@ namespace Shadowsocks.Model
 
         public static void CheckServer(Server server)
         {
-            CheckPort(server.server_port);
-            CheckPassword(server.password);
             CheckServer(server.server);
-            CheckTimeout(server.timeout, Server.MaxServerTimeoutSec);
+            CheckPort(server.server_port);
+            var ss = server as ShadowsocksServer;
+            if (ss != null) {
+                CheckPassword(ss.password);
+                CheckTimeout(ss.timeout, Server.MaxServerTimeoutSec);
+            }
         }
 
         public static Configuration Load()
@@ -59,7 +62,7 @@ namespace Shadowsocks.Model
                 config.isDefault = false;
 
                 if (config.configs == null)
-                    config.configs = new List<Server>();
+                    config.configs = new List<ShadowsocksServer>();
                 if (config.configs.Count == 0)
                     config.configs.Add(GetDefaultServer());
                 if (config.localPort == 0)
@@ -87,7 +90,7 @@ namespace Shadowsocks.Model
                     isDefault = true,
                     localPort = 1080,
                     autoCheckUpdate = true,
-                    configs = new List<Server>()
+                    configs = new List<ShadowsocksServer>()
                     {
                         GetDefaultServer()
                     },
@@ -122,9 +125,9 @@ namespace Shadowsocks.Model
             }
         }
 
-        public static Server GetDefaultServer()
+        public static ShadowsocksServer GetDefaultServer()
         {
-            return new Server();
+            return new ShadowsocksServer();
         }
 
         private static void Assert(bool condition)

@@ -36,7 +36,7 @@ namespace Shadowsocks.Controller
         private StrategyManager _strategyManager;
         private PrivoxyRunner privoxyRunner;
         private GFWListUpdater gfwListUpdater;
-        private readonly ConcurrentDictionary<Server, Sip003Plugin> _pluginsByServer;
+        private readonly ConcurrentDictionary<ShadowsocksServer, Sip003Plugin> _pluginsByServer;
 
         public AvailabilityStatistics availabilityStatistics = AvailabilityStatistics.Instance;
         public StatisticsStrategyConfiguration StatisticsConfiguration { get; private set; }
@@ -84,7 +84,7 @@ namespace Shadowsocks.Controller
             _config = Configuration.Load();
             StatisticsConfiguration = StatisticsStrategyConfiguration.Load();
             _strategyManager = new StrategyManager(this);
-            _pluginsByServer = new ConcurrentDictionary<Server, Sip003Plugin>();
+            _pluginsByServer = new ConcurrentDictionary<ShadowsocksServer, Sip003Plugin>();
             StartReleasingMemory();
             StartTrafficStatistics(61);
         }
@@ -102,7 +102,7 @@ namespace Shadowsocks.Controller
             }
         }
 
-        public Server GetCurrentServer()
+        public ShadowsocksServer GetCurrentServer()
         {
             return _config.GetCurrentServer();
         }
@@ -136,7 +136,7 @@ namespace Shadowsocks.Controller
             return null;
         }
 
-        public Server GetAServer(IStrategyCallerType type, IPEndPoint localIPEndPoint, EndPoint destEndPoint)
+        public ShadowsocksServer GetAServer(IStrategyCallerType type, IPEndPoint localIPEndPoint, EndPoint destEndPoint)
         {
             IStrategy strategy = GetCurrentStrategy();
             if (strategy != null)
@@ -150,7 +150,7 @@ namespace Shadowsocks.Controller
             return GetCurrentServer();
         }
 
-        public EndPoint GetPluginLocalEndPointIfConfigured(Server server)
+        public EndPoint GetPluginLocalEndPointIfConfigured(ShadowsocksServer server)
         {
             var plugin = _pluginsByServer.GetOrAdd(server, Sip003Plugin.CreateIfConfigured);
             if (plugin == null)
@@ -175,7 +175,7 @@ namespace Shadowsocks.Controller
             return plugin.LocalEndPoint;
         }
 
-        public void SaveServers(List<Server> servers, int localPort, bool portableMode)
+        public void SaveServers(List<ShadowsocksServer> servers, int localPort, bool portableMode)
         {
             _config.configs = servers;
             _config.localPort = localPort;
@@ -194,7 +194,7 @@ namespace Shadowsocks.Controller
             try
             {
                 if (ssURL.IsNullOrEmpty() || ssURL.IsWhiteSpace()) return false;
-                var servers = Server.GetServers(ssURL);
+                var servers = Server.GetShadowsocksServers(ssURL);
                 if (servers == null || servers.Count == 0) return false;
                 foreach (var server in servers)
                 {
@@ -323,11 +323,10 @@ namespace Shadowsocks.Controller
 
         public string GetServerURLForCurrentServer()
         {
-            Server server = GetCurrentServer();
-            return GetServerURL(server);
+            return GetServerURL(GetCurrentServer());
         }
 
-        public static string GetServerURL(Server server)
+        public static string GetServerURL(ShadowsocksServer server)
         {
             string tag = string.Empty;
             string url = string.Empty;

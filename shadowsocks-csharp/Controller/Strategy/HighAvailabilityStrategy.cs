@@ -28,7 +28,7 @@ namespace Shadowsocks.Controller.Strategy
             // connection refused or closed before anything received
             public DateTime lastFailure;
 
-            public Server server;
+            public ShadowsocksServer server;
 
             public double score;
         }
@@ -79,7 +79,7 @@ namespace Shadowsocks.Controller.Strategy
             ChooseNewServer();
         }
 
-        public Server GetAServer(IStrategyCallerType type, System.Net.IPEndPoint localIPEndPoint, EndPoint destEndPoint)
+        public ShadowsocksServer GetAServer(IStrategyCallerType type, System.Net.IPEndPoint localIPEndPoint, EndPoint destEndPoint)
         {
             if (type == IStrategyCallerType.TCP)
             {

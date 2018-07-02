@@ -15,7 +15,7 @@ namespace Shadowsocks.Controller.Strategy
     internal class StatisticsStrategy : IStrategy, IDisposable
     {
         private readonly ShadowsocksController _controller;
-        private Server _currentServer;
+        private ShadowsocksServer _currentServer;
         private readonly Timer _timer;
         private Statistics _filteredStatistics;
         private AvailabilityStatistics Service => _controller.availabilityStatistics;
@@ -78,7 +78,7 @@ namespace Shadowsocks.Controller.Strategy
             return score;
         }
 
-        private void ChooseNewServer(List<Server> servers)
+        private void ChooseNewServer(List<ShadowsocksServer> servers)
         {
             if (_filteredStatistics == null || servers.Count == 0)
             {
@@ -127,7 +127,7 @@ namespace Shadowsocks.Controller.Strategy
 
         public string Name => I18N.GetString("Choose by statistics");
 
-        public Server GetAServer(IStrategyCallerType type, IPEndPoint localIPEndPoint, EndPoint destEndPoint)
+        public ShadowsocksServer GetAServer(IStrategyCallerType type, IPEndPoint localIPEndPoint, EndPoint destEndPoint)
         {
             if (_currentServer == null)
             {
